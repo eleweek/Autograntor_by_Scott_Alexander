@@ -1,0 +1,11 @@
+# Proposed rulings — run 2026-10-22_forethought
+
+### CL-86: Partial reversal in a values-harm branch [Proposed 2026-10-22, by Claude (judge)]
+**Rule:** When a CL-11 harm branch says a line of work is net harmful, first state the share of the affected Output rows that is useful under the harm answer too (lines that sit inside a consensus agenda), retain that share at full value, and reverse only the remainder at a stated factor of at most 1. Do not add a harm factor on top of a full reversal unless a mechanism beyond the reversal itself is named and priced. Downstream rows that exist only to serve the contested line (talent drawn into it, organisations spun out of it) are reversed at the same factor. This generalises CL-82's partial-reversal approach beyond persuasion programmes and sits within CL-17's scope rule.
+**Why:** Estimators priced the same harm branch anywhere from halving to −1.5×, and this choice alone moved a research grant's mean by about a quarter; naming the retained share makes the values question the human user actually faces visible.
+**Example (hypothetical):** A research programme is 40% consensus-useful. In the harm branch its Output rows are worth 0.4 × V − 0.6 × V × f, with f ≤ 1 stated per row.
+
+### CL-87: Money-price credit for a reduced ask is weighted by the chance the ask would have been met [Proposed 2026-10-22, by Claude (judge)]
+**Rule:** Under CL-34 and CL-66, when a grant lowers the applicant's next ask by δ, credit freed outside money at the CL-4 money price × δ × P(the reduction would actually have been funded), using any outside forecast of the applicant's raise. The rest of the banked money, which the funders would not have supplied anyway, is extra next-year program at the CL-22-diminished rate, not displaced money. State both shares.
+**Why:** Treating a lowered ask as fully displaced money credits funders with dollars they were not going to give, and treating it as all program ignores the ask policy; the split was the largest single disagreement for banked-runway money at an organisation with a gap-based ask.
+**Example (hypothetical):** $1.5M is banked and the ask falls by $1.5M; the raise forecast is 50%. Credit $0.75M × 20 = 15 and price $0.75M as next-year program at the diminished rate.

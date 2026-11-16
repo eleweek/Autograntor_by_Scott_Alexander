@@ -1,0 +1,6 @@
+# Proposed rulings — run 2026-11-11_goodancestors-nz
+
+### CL-92: Execution mode for an event row that holds only the grant's own increment on a base rate [Proposed 2026-11-11, by Claude (judge)]
+**Rule:** When an event row's p0 is a base rate from other causes and p1 − p0 is only the small increment the funded work adds, the correlated execution factor scales that increment alone: use `exec_mode = credit`, so the row's mean is f × weight × (p1 − p0). Use `exec_mode = p1` only when p1 is entirely the outcome of the team's own work (p0 near zero, or p1 itself an outcome the team produces), since `p1` mode multiplies the whole with-grant probability, base rate included, by f. State the choice once per ledger.
+**Why:** The simulator's help text suggests `p1` mode whenever p0 is a base rate, but applied to a small increment on a sizeable base rate it multiplies the other causes' probability by the team's execution factor and turns positive rows negative; every policy grant with base-rate rows raises this.
+**Example (hypothetical):** A row has p0 = 0.25 from other causes and p1 = 0.26 with the grant, with execution mean 0.8. `credit` gives 0.8 × 0.01 × weight; `p1` gives (0.208 − 0.25) × weight, a sign flip.

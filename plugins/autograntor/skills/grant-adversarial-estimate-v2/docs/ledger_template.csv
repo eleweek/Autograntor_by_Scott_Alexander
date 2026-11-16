@@ -1,8 +1,9 @@
-name,size,kind,weight,p1,p0,ev,sigma,pivotal,exec,exec_mode,group,branch,branch_val,post2030,given,note
-EXAMPLE law passes,1M,event,8000,0.12,0.10,,,0.5,team,credit,policy,,,0.1,,delete these example rows
-EXAMPLE tool is used by a lab,1M,event,600,0.40,0.10,,,,team,credit,uptake,,,0,,
-EXAMPLE tool is net capabilities,1M,event,-900,0.05,0.01,,,,,,uptake,,,0,,harm mirror: same group as the row above
-EXAMPLE audience opinion shift,1M,continuous,,,,40,25,,team,,opinion,,,0,,PERCYs converted to utility
-EXAMPLE convening helps,1M,continuous,,,,30,20,,,,values,hosting_helps,yes,0,,"CL-11 branch, priced both ways"
-EXAMPLE convening hurts,1M,continuous,,,,-45,20,,,,values,hosting_helps,no,0,,
-EXAMPLE follow-on money charge,1M,charge,,,,-20,8,,,,money,,,0,,CL-4
+size,row,kind,weight,p1,p0,ev,sigma,pivotal,exec,exec_mode,group,branch,branch_val,post2030,note
+1M,Federal transparency law,event,50000,0.0030,0.0000,,,,program,credit,policy,,,0,"ΔP for the grant at this size (p1−p0 = 0.0030)"
+1M,Paper cited or used by a control team,event,125,0.10,0.01,,,,program,p1,uptake,,,0,"p0 is a base rate from other causes, so only p1 scales with execution"
+1M,Media PERCYs,continuous,,,,78.1,0.5,,program,,media,,,0.1,"0.065M PERCYs × 1200/M"
+1M,Public engagement (good branch),continuous,,,,30,0.6,,program,,values,PE_good,yes,0,"CL-11 branch"
+1M,Public engagement (harm branch),continuous,,,,-15,0.6,,program,,values,PE_good,no,0,"CL-11 branch"
+1M,Overlap: media vs policy (CL-5),charge,,,,-4,,,,,overlap,,,0,
+1M,Bad hires (CL-36),charge,,,,-11.1,0.3,,,,charge,,,0,
+1M,Follow-on money (CL-4),charge,,,,-3.75,,,,,money,,,0,"50 per $1M"

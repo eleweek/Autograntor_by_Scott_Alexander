@@ -1,48 +1,48 @@
-# Autograntor plugin (unofficial prototype)
+# Autograntor plugin (unofficial packaging)
 
 A self-contained packaging of the `grant-adversarial-estimate-v2` skill from Scott Alexander's
 [Towards The Autograntor](https://www.lesswrong.com/posts/Sfkv6JF2ozmAkggKu), so that it can be
 installed from one place and run without a private Claude Project.
 
-**This is a prototype by a third party, not an official release.** The Common Law, the milestone
-weights, the PERCYs module and the skill are Scott Alexander's work. Some pieces the skill needs
-were never published; here they are reconstructed or left empty, and are marked as such below.
-Results from this package are **not comparable** with the owner's own runs until the original
-files are swapped in.
+**This is a third party's packaging, not an official release.** The Common Law, the milestone
+weights, the PERCYs module, the simulator and the skill are Scott Alexander's work. From version
+0.2.0 the documents and scripts are his own files, taken unchanged from his starter package dated
+2026-11-12 (PERCYs v4). The only thing changed is where the skill reads and writes: a local folder
+instead of a Claude Project.
 
 ## What is in the package
 
 | File (under `plugins/autograntor/skills/grant-adversarial-estimate-v2/`) | Status |
 |---|---|
-| `SKILL.md` | The published v2 skill with targeted edits (see "Changes to the skill"). |
-| `docs/common_law_core.md` | **Converted.** Part I and the 16 Adopted rulings from the published Common Law, version 2026-10-18.2. Ruling text unchanged. |
-| `docs/common_law_topics/*.md` | **Converted.** The 46 Proposed rulings, text unchanged. **Which ruling sits in which topic file is a guess.** |
-| `docs/common_law_index.md` | **Rebuilt.** One line per ruling, CL-1 to CL-83. |
-| `docs/common_law_proposed/README.md` | **Reconstructed** from the skill's description of the bar for new rulings. |
-| `docs/milestones_weights.md` | **Converted** from the published spreadsheet; all 85 values unchanged. |
-| `docs/milestones_added.md` | **Empty placeholder.** The owner's added milestones were not published. |
-| `docs/PERCYs_v3.7_compact.md` | **Converted** from the published document; text unchanged. |
-| `docs/simulate.py`, `docs/ledger_template.csv` | **Reconstructed.** Not the original. See "The simulator". |
+| `docs/` (26 files) | **The owner's files, byte for byte**, from the `claude/` folder of the 2026-11-12 package. |
+| `docs/common_law_core.md`, `common_law_index.md`, `common_law_topics/*.md` | The frozen Common Law, CL-1 to CL-83, plus Adopted CL-91. |
+| `docs/common_law_proposed/*.md` | Ten per-run files with the rulings added after the freeze (CL-84 to CL-94). |
+| `docs/milestones_weights.md`, `docs/milestones_added.md` | Canonical weights; Approved and Proposed milestones and parameters. |
+| `docs/PERCYs_v4.md` | Pricing rules for persuasion and media grants. |
+| `docs/simulate.py`, `docs/ledger_template.csv` | The owner's ledger simulator. Needs numpy. |
+| `docs/mean_range.py` | Range-on-the-mean helper for the judge. |
+| `docs/fetch_manifund.py` | Reads a Manifund listing as data. Needs network access to manifund.org. |
+| `SKILL.md` | The owner's skill with the edits listed under "Changes to the skill". |
+| `check_staging.py` | **Added by this packaging.** One command that checks the staged copy. |
 
-`originals/` holds the four published files exactly as downloaded, for comparison.
+`originals/` holds the 2026-11-12 package as received (the ZIP and its `SKILL.md`), and the four
+files published with the original post, which the package supersedes.
 
-### Known gaps
+### Known issues
 
-1. **CL-63 to CL-83 are missing.** The v2 skill refers to 83 rulings; the published Common Law
-   stops at CL-62. The index marks the missing ones and the skill is told never to cite or guess
-   them. One of them (CL-74) defines how values-question "corners" are reported.
-2. **`simulate.py` is a reconstruction** (next section).
-3. **`milestones_added.md` is empty.** The Common Law mentions at least one Proposed milestone
-   ("member of Congress champion", CL-51) that is not in the published weights.
-4. **Run end to end once only** (one grant, 2026-11-11; see `NOTES_FOR_SCOTT.md`). The run was driven from the repository folder, not from an installed plugin, so the install step itself is untested.
-
-### To replace placeholders with the originals
-
-Drop the owner's files over the ones in `docs/`, keeping the file names: `simulate.py`,
-`ledger_template.csv`, `common_law_core.md`, `common_law_index.md`, `common_law_topics/*.md`,
-`common_law_proposed/*`, `milestones_weights.md`, `milestones_added.md`. Then, in `SKILL.md`,
-remove the "Prototype packaging" note, the two sentences about missing CL-63 to CL-83 and CL-74,
-and change the ruling count in the Setup check from 62 back to 83.
+1. **Four ruling numbers are used more than once.** In `docs/common_law_proposed/`, CL-86, CL-87
+   and CL-90 each name two different rulings and CL-89 names three, because separate runs numbered
+   their rulings independently. The files are left as the owner wrote them. The skill is told to
+   cite these as number plus file name, and `check_staging.py` lists them at every run.
+2. **Some documents still mention the Project** (`claude/...` paths, `project_info`, a frozen
+   `common_law.md` that is not in the package). The skill tells agents how to read these.
+3. **The funder price table (CL-91) is the owner's policy**, for example the funding platform's
+   own money at 50 per $1M. Edit `docs/common_law_core.md` if your situation differs, and say so
+   when you report results.
+4. **Not yet run end to end in this form.** Version 0.2.0 has passed the staging check and the
+   tests below. No full grant run has been done with it, and the install step is untested.
+5. **Results are still not comparable with the owner's own runs** unless your staged rulings and
+   milestones match his at the time of his run.
 
 ## Install
 
@@ -59,72 +59,75 @@ repository's address. Then install `autograntor`.
 **Without a repository:** zip the `plugins/autograntor` folder and upload it as a custom plugin, or
 in Claude Code run `claude --plugin-dir ./plugins/autograntor`.
 
-Then ask, for example: *"Use the grant-adversarial-estimate-v2 skill to score [grant name] at
-$200K. The application is at [link or attached file]."* The skill uses subagents (one Sonnet
-pre-pass, one Opus and one Fable estimator, a Fable judge), so a run takes a while. FutureSearch
-is optional; without the connector the skill skips it and says so.
+Then ask, for example: *"Use the grant-adversarial-estimate-v2 skill to score [grant name]. The
+application is at [link or attached file]."* The skill uses subagents (one Sonnet pre-pass, one
+Opus and one Fable estimator, a Fable judge), so a run takes a while. FutureSearch is optional;
+without the connector the skill skips it and says so. Lightcone Commons access is not included.
 
 ## Changes to the skill
 
-`originals/SKILL_v2_as_published.md` is the published text; `tools/edit_skill.py` applies every
-change, so the difference is reviewable. In short:
+`originals/SKILL_v2_package_2026-11-12.md` is the owner's text. `tools/edit_skill.py` applies every
+change as an exact find-and-replace and fails if any does not match, so the difference is
+reviewable. In short:
 
-- **Documents come from the skill's own `docs/` folder**, copied to the working directory with one
-  command, instead of being read from a Claude Project file by file.
-- **New Proposed rulings and milestones are written locally and handed to the user**, not uploaded
-  to a Project. The user can attach them in a later session to reuse them. Nothing is submitted
+- **Documents come from the skill's own `docs/` folder**, copied once per session to
+  `grant_eval/_docs/` and read there, instead of being read from a Claude Project.
+- **What the owner's skill uploads to the Project is written locally and sent to the user**:
+  briefs (`grant_eval/_briefs/`), ledgers and the run record (`grant_eval/_ledgers/`), new
+  Proposed rulings, added milestones and the report. To carry rulings, milestones or a brief into
+  a later session, attach the files; the skill copies them in at Setup. Nothing is submitted
   anywhere automatically.
-- **The report is saved locally and sent to the user.**
-- **FutureSearch is skipped cleanly** when the connector is absent.
-- **Notes about the gaps above**, and a version line in every report stating that the simulator is
-  the reconstruction.
+- **Setup is one copy and one check** (`check_staging.py`), replacing the owner's step that
+  re-typed the scripts out of the Project.
+- **FutureSearch is skipped cleanly** when the connector is absent, and the Manifund reader asks
+  for an attached application if the sandbox cannot reach the site.
+- **Duplicate ruling numbers are cited with their file name** (known issue 1).
 
-Everything else (the pre-pass, estimators, critique rule, judge, call budgets) is untouched.
+Everything else is untouched: the three modes, the pre-pass, estimators, critique rule, judge,
+funging and tranche reporting, call budgets.
 
-## The simulator
+## Rebuilding from a newer package
 
-`simulate.py` takes a ledger (a CSV with one row per consequence of the grant) and reports the
-mean, median, P10/P90, P(negative), post-2030 share, group totals and values-branch corners. A
-`--diff` mode compares two ledgers and applies the skill's agreement test. Run
-`python3 simulate.py --help` for the column definitions.
-
-Taken from the published sources:
-
-- An event row is worth weight × (P with grant − P without). (CL-1, CL-2)
-- Quantiles are of realised value: simulate whether each outcome happens and credit it at
-  weight × (1 − P0/P1) when it does; the mean still equals the row-by-row expected value. (CL-16)
-- Optional pivotal/diffuse split per row, which changes the spread and not the mean. (CL-55)
-- A correlated execution factor scales program rows and never charges. (CL-37, CL-40)
-- Values questions change only the rows that depend on them. (CL-11, CL-17)
-- The agreement test thresholds: means within 30% (or both within 50 of zero), same largest group,
-  no group differing by more than 30% of the larger mean. (v2 skill, Step 2)
-
-**Guesses**, where the sources are silent. These are the places the original most likely differs:
-
-| Convention | What this version does |
-|---|---|
-| The fixed list of `group` categories | The skill names only `uptake`, `values` and `exposure`. The other nine are invented here. |
-| `--corr` | Keyed by group name (or `*`): rows in that group share one common factor. |
-| `--exec` format | A list of `[probability, multiplier]` states, a lognormal, or a constant. |
-| `exec_mode` | `credit` multiplies the increment (P1 − P0); `p1` multiplies P1 only. |
-| "Fixed-weight spread" (CL-74, unpublished) | In each simulated world, value is the weighted average across the branch answers. Each corner is also reported separately. |
-| Post-2030 share | Sum of (row mean × the row's `post2030` share) ÷ total mean. |
-| Rows where the grant lowers a probability | Credited when the outcome is averted, mirroring CL-16. |
-| Costs that exist only if an event happens | Optional `given` column: the row counts only in worlds where the named event row happens; the mean is unchanged. Not described in the skill. |
-
-### Tests
+Put the owner's new ZIP in `originals/` and run:
 
 ```
-python3 tests/test_simulate.py
+python3 tools/build_docs.py originals/<new package>.zip
+python3 tests/test_package.py
 ```
 
-Fifteen tests with numbers that can be checked by hand (for example CL-2's own example: a law
-moved from 10% to 12% earns 2% of its weight). They show the arithmetic does what this README
-says. They do not show it matches the original simulator.
+`build_docs.py` unpacks the package's `claude/` folder into `docs/` unchanged and runs
+`edit_skill.py`. If the owner's `SKILL.md` has changed, `edit_skill.py` stops at the first edit
+that no longer matches; update that edit and rerun. Then update the package name and file count
+in `tests/test_package.py`, and the ruling counts in `check_staging.py` if the frozen Common Law
+has grown.
 
-The document conversion was checked separately: all 62 published rulings, the PERCYs text and the
-85 milestone values match the originals word for word. `tools/build_docs.py` regenerates `docs/`
-from the published files.
+## Tests
+
+```
+python3 tests/test_package.py
+```
+
+Eighteen tests. Four check the packaging: every file in `docs/` is identical to the file in the
+owner's ZIP, `SKILL.md` is exactly what `edit_skill.py` produces, and the staging check passes on
+a clean copy and fails on an edited one. Fourteen check the owner's simulator and range helper
+against numbers that can be verified by hand (for example CL-2's own example: a law moved from
+10% to 12% earns 2% of its weight). They describe the simulator; they do not change it.
+
+## What changed from 0.1.0
+
+Version 0.1.0 was built from the four files published with the post, with the gaps filled in:
+a reconstructed simulator, no rulings after CL-62, an empty added-milestones file, PERCYs v3.7.
+Version 0.2.0 replaces all of that with the owner's files. Consequences:
+
+- **Ledgers from 0.1.0 do not run unchanged.** The owner's simulator names the row column `row`
+  (not `name`), takes `--branches` as `{question: P(yes)}` with `branch_val` of `yes` or `no`, and
+  takes `--exec` as `{group: {"mean": m, "collapse_p": c}}`.
+- **The reconstruction's `given` column is gone.** The owner's simulator has no way to make a
+  charge apply only in worlds where a named event happens, so such a charge is paid in every
+  world. The mean is unaffected; the median and P(negative) are more pessimistic than they should
+  be for grants whose costs depend on success.
+- **The money price is no longer a single 20 per $1M.** CL-91 sets a price per funder tier, and
+  every forecast reports a base value and a with-funging value.
 
 ## Open questions for the owner
 
@@ -133,5 +136,6 @@ from the published files.
 3. Are outside contributions to the Common Law wanted at all?
 4. Should users be able to layer their own weights and rulings on top, and how should reports label
    results produced that way?
-5. Licence for the Common Law, weights and skill. None is stated here; all rights remain with the
-   author until he says otherwise.
+5. Should the duplicate ruling numbers be renumbered at the source?
+6. Licence for the Common Law, weights, simulator and skill. None is stated here; all rights remain
+   with the author until he says otherwise.

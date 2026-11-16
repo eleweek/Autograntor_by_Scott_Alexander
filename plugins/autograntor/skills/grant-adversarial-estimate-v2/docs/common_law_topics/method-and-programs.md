@@ -1,40 +1,36 @@
-# Common Law topic file: method-and-programs
+# Common Law topic file — method, venues and programs
 
-> **Packaging note (prototype, not part of the Common Law).** Simulation and spread, post-2030 share, attribution across years, lags and dated windows, venues, and programs that die without the grant. Ruling text is copied unchanged from the published Common Law (version 2026-10-18.2). Which ruling goes in which topic file is the packager's guess.
+Verbatim copies of Proposed rulings from Part III of `claude/common_law.md` (frozen original, version 2026-10-20.1), grouped by topic. The original remains the source of truth. Rulings in this file: CL-16, 18, 19, 29, 31, 55, 58, 59. CL-16, CL-18 and CL-55 govern the simulation and the post-2030 share and apply to every grant (`simulate.py` implements them); CL-19 and CL-31 apply to venues, incubators and programs that die without the grant; CL-29, CL-58 and CL-59 are superseded or struck.
 
-### CL-16: Report the spread of realised 2030 value, not of expectations [Proposed 2026-10-16, by Claude]
-
-**Rule:** P10/median/P90 are quantiles of the grant's value as it will look from 2030 (CL-1, CL-7): simulate whether each outcome happens, and when it does, credit it at weight × (1 − P(it would have happened anyway)). Do not simulate noise around row expectations; that compresses the right tail. The mean must still equal the row-by-row EV. **Why:** The human user asked for P10 and P90 over value judged in 2030; a lumpy outcome (a lab practice visibly changed, a corpus recognised) is realised at several times its expected value or at zero.
+### CL-16: Report the spread of realised 2030 value, not of expectations [Proposed 2026-10-16, by Claude; amended by the human user 2026-10-19]
+**Rule:** P10/median/P90 are quantiles of the grant's value as it will look from 2030 (CL-1, CL-7): simulate whether each outcome happens, and when it does, credit it at weight × (1 − P(it would have happened anyway)). Do not simulate noise around row expectations; that compresses the right tail. The mean must still equal the row-by-row EV. Effects that are not discrete events (opinion shifts, capacity, relationships, probability shifts of post-2030 milestones) stay in the ledger at full expected value and enter the simulation as continuous quantities with their own uncertainty; never omit an effect because it doesn't fit the event-simulation format. Rank grants by mean; treat medians, P10 and P(negative) as descriptive only.
+**Why:** The human user asked for P10 and P90 over value judged in 2030; a lumpy outcome (a lab practice visibly changed, a corpus recognised) is realised at several times its expected value or at zero. The amendment keeps the event format from silently dropping effects that aren't events, and stops the skew of tail-driven grants from being read as a reason to rank them lower.
 
 ### CL-18: What counts as "post-2030" under CL-7 [Proposed 2026-10-16, by Claude]
-
-**Rule:** The post-2030 share means value from activity that occurs after 2030 (an organization still operating in 2031+, the post-2030 portion of a tail outcome), discounted for TAI. Unit prices on the weights list (researcher-year, fellowship, lab point) are already values judged from 2030 under the stated worldview, so the downstream of a pre-2030 output is not split again into pre- and post-2030 parts and discounted a second time. Report the downstream-inclusive share as a secondary figure. **Why:** Splitting and then discounting counts the worldview twice, and without a fixed definition the reported share moves a lot on reporting choices alone.
+**Rule:** The post-2030 share means value from activity that occurs after 2030 (an organization still operating in 2031+, the post-2030 portion of a tail outcome), discounted for TAI. Unit prices on the weights list (researcher-year, fellowship, lab point) are already values judged from 2030 under the stated worldview, so the downstream of a pre-2030 output is not split again into pre- and post-2030 parts and discounted a second time. Report the downstream-inclusive share as a secondary figure.
+**Why:** Splitting and then discounting counts the worldview twice, and without a fixed definition the reported share moves a lot on reporting choices alone.
 
 ### CL-19: Hosted vs self-run programs at a venue or incubator [Proposed 2026-10-16, by Claude]
+**Rule:** A program run by another organization and hosted at the grantee's venue gets only a venue/ops share of its counterfactual value, because it would mostly run elsewhere, worse or at higher cost (≈20% unless there is evidence otherwise). A program the grantee runs itself with the grant's money gets full counterfactual credit (CL-3) × P(it actually runs) × a first-run quality factor (≈0.7).
+**Why:** Without this, venue grants either claim hosted programs in full (overcounting) or apply arbitrary "shares" to their own programs (a credit pie).
 
-**Rule:** A program run by another organization and hosted at the grantee's venue gets only a venue/ops share of its counterfactual value, because it would mostly run elsewhere, worse or at higher cost (≈20% unless there is evidence otherwise). A program the grantee runs itself with the grant's money gets full counterfactual credit (CL-3) × P(it actually runs) × a first-run quality factor (≈0.7). **Why:** Without this, venue grants either claim hosted programs in full (overcounting) or apply arbitrary "shares" to their own programs (a credit pie).
+### CL-29: Leader-commitment-gated, refundable grants [Proposed 2026-10-17, by Claude]
+**Rule:** When the applicant's lead has promised to decide before disbursement and return the money if not fully in, model commitment as a gate whose probability may depend on grant size (from the applicant's own statements), value the refund branch at exactly 0 (both worlds identical, no CL-4 charge, no no-grant revival difference), and report P(=0) separately from P(<0). Report per-$1M both nominal and per dollar expected to be spent, and the conditional-on-commit figures, since the grantmaker may learn the answer before money moves.
+**Why:** Treating the refund branch as wasted money overstates the downside; treating commitment as certain overstates value; and the median can legitimately sit at zero.
+*(Superseded in part by Adopted CL-33: the headline is now the value conditional on disbursement, and P(=0) and the unconditional figures need not be reported.)*
 
 ### CL-31: Grant-caused continuation of a program that dies without the grant [Proposed 2026-10-17, by Claude]
-
-**Rule:** When the no-grant world is "the program dies", credit continuation years the grant makes possible at stated per-year probabilities (CL-23 chain), valued on the same per-cohort ledger as the funded year (quality, P(run), downsides and mixture included), with a crowding decay (CL-6) and the CL-4 money charge for each year's fundraising (CL-28). A later round of the same funder is ordinary fundraising in the grant world (CL-8 forbids it only in the no-grant world), including a within-year top-up for a partial grant, credited net of the money charge. Always report the share of value from the funded year's spending; a continuation share above ~40% should trigger a re-check of the per-year probabilities. **Why:** Without this, estimators either valued continuation years at an undiscounted gross figure or ignored partial-grant top-ups entirely; both distort the ratio between grant sizes.
-
-### CL-46: Attributing a multi-year outcome to one year's spending [Proposed 2026-10-18, by Claude]
-
-**Rule:** When a grant funds one year of a multi-year campaign, attribute to that year the share f of the critical-path effort that falls in it (drafting, sponsor recruitment, session timing), stated per row, with the shares across the campaign's years summing to at most one. Do not attribute pro-rata by budget, do not credit the whole outcome to the funded year, and do not use a higher f for a longer-horizon outcome than for a nearer one. **Why:** Without a stated share, one year of an advocacy organisation is credited with whole laws, which fails CL-9 when multiplied over the years it actually takes.
-
-### CL-52: Recruit-on-funding lags, dated windows and part-time roles [Proposed 2026-10-17, by Claude]
-
-**Rule:**
-
-- **Lag.** If funded activity starts only after recruitment, shift it by the stated lag (default 2–3 months from disbursement).
-
-- **Dated windows.** Price rows tied to a dated window (an election, a summit) on the post-lag share of the critical-path work in that window, not the calendar share (CL-46). Don't give extra window credit to money above the ask that arrives after the window.
-
-- **Part-time roles.** Value a 0.5-FTE relationship role at ≈0.5 of the full-time increment if it spans a dated window, ≈0.4 otherwise.
-
-**Why:** Without a rule, estimators invent their own treatment, and rows tied to dated windows can differ by a large factor.
+**Rule:** When the no-grant world is "the program dies", credit continuation years the grant makes possible at stated per-year probabilities (CL-23 chain), valued on the same per-cohort ledger as the funded year (quality, P(run), downsides and mixture included), with a crowding decay (CL-6) and the CL-4 money charge for each year's fundraising (CL-28). A later round of the same funder is ordinary fundraising in the grant world (CL-8 forbids it only in the no-grant world), including a within-year top-up for a partial grant, credited net of the money charge. Always report the share of value from the funded year's spending; a continuation share above ~40% should trigger a re-check of the per-year probabilities.
+**Why:** Without this, estimators either valued continuation years at an undiscounted gross figure or ignored partial-grant top-ups entirely; both distort the ratio between grant sizes.
 
 ### CL-55: Amendment to CL-16, pivotal vs diffuse credit for traceable rows [Proposed 2026-10-17, by Claude]
+**Rule:** When a 2030 evaluator can plausibly see whether the grant was on the causal path (a named legislator the hire briefed; a campaign team it met; a report it fed), simulate pivotal worlds (large credit, rare) and diffuse worlds (small credit when the outcome occurs anyway) separately, with the pivotal share stated per row. For untraceable rows (a government position, an EU vote), keep CL-16's w × (1 − P0/P1) in every world where the outcome occurs. The means are unchanged either way.
+**Why:** Literal CL-16 on frequently firing traceable rows inflates the median and upper quartiles.
 
-**Rule:** When a 2030 evaluator can plausibly see whether the grant was on the causal path (a named legislator the hire briefed; a campaign team it met; a report it fed), simulate pivotal worlds (large credit, rare) and diffuse worlds (small credit when the outcome occurs anyway) separately, with the pivotal share stated per row. For untraceable rows (a government position, an EU vote), keep CL-16's w × (1 − P0/P1) in every world where the outcome occurs. The means are unchanged either way. **Why:** Literal CL-16 on frequently firing traceable rows inflates the median and upper quartiles.
+### CL-58: [Struck by the human user 2026-10-18] Evaluator recommendations in a bill-splitting round
+*Do not apply. This ruling made the headline one evaluator's recommendation stacked on the other evaluators' money in the same round, which Adopted CL-62 rejects. The number is kept so it is not reused.*
 
+### CL-59: A later round of the same funder when the organisation survives without the grant [Proposed 2026-10-17, by Claude]
+*(Superseded 2026-10-18 by Adopted CL-62: later rounds of the same platform are left out of both worlds when the organisation survives without the grant. Since the scored grant is always the platform's money, do not apply this ruling; later rounds of funders outside the platform are pending money under CL-14/CL-34.)*
+**Rule:** If the no-grant organisation operates at or above about half its plan, model a later round of the same funder in both worlds (CL-14/CL-34 logic): the award shrinks as the grant fills the gap, and displaced dollars are credited at the money price. CL-8's rescue clause and CL-31's parenthetical apply only below that threshold. A reading defined as "this funder's money vs none" excludes the later round from both worlds.
+**Why:** Adopted CL-8 forbids modelling an organisation that can never raise money again, and CL-31 is scoped to programs that die; asymmetric treatment inflates the marginal factor in low-funding draws.

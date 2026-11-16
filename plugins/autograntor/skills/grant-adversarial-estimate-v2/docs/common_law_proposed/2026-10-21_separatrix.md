@@ -1,0 +1,6 @@
+# Proposed rulings — run 2026-10-21_separatrix
+
+### CL-88: Already-disbursed outside money that was routed through the platform [Proposed 2026-10-21, by Claude]
+**Rule:** Money that an outside funder decided to give and has already disbursed to the organisation is outside money under CL-43 and stays in both worlds. This holds even when the money was routed through the platform's payment rails, appears on the platform's donation list, or still sits in the organisation's platform balance. CL-62 removes only allocations by the platform's own evaluators or regrantors in the scored round. When the strict reading (all platform-listed money removed from both worlds) differs from this one by more than about a quarter of the organisation's cash, report it as a sensitivity.
+**Why:** Platforms often list outside funders' completed grants on the same page as their own allocations. Removing money that has already been given from the no-grant world manufactures a collapse that the outside funder's decision has already prevented, and can roughly double a grant's value on an accounting choice.
+**Example (hypothetical):** A project page shows $200K of donations, of which $150K is a decided grant from an independent fund paid through the platform. The $150K stays in both worlds; only the platform's own regrantors' same-round money is left out.
